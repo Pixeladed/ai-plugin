@@ -1,7 +1,11 @@
 /**
  * Failed to validate the manifest for an AI plugin
  */
-export class ManifestValidationError extends Error {}
+export class ManifestValidationError extends Error {
+  constructor(message: string, readonly cause?: Error) {
+    super(message);
+  }
+}
 
 /**
  * Failed to fetch the manifest for an AI plugin

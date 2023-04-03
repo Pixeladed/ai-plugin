@@ -2,7 +2,7 @@ import type { Manifest } from "./manifest_schema";
 import { ManifestSchema } from "./manifest_schema";
 import { URL } from "url";
 import { RedirectValidator } from "./redirect_validator";
-import { ManifestFetchError } from "./errors";
+import { ManifestFetchError, ManifestValidationError } from "./errors";
 
 /**
  * This class provides methods for finding and parsing AI plugins given an origin.
@@ -37,9 +37,16 @@ export class PluginExplorer {
       );
     }
 
-    const data = await res.json();
-    const manifest = await ManifestSchema.parseAsync(data);
-    return manifest;
+    try {
+      const data = await res.json();
+      const manifest = await ManifestSchema.parseAsync(data);
+      return manifest;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new ManifestValidationError(error.message, error);
+      }
+      throw error;
+    }
   }
 
   private resolveManifestUrl(url: string) {
