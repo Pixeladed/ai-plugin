@@ -34,7 +34,7 @@ export class RedirectValidator {
     const parsedUrl2 = new URL(url2);
     const url1Parts = parsedUrl1.hostname.split(".");
     const url2Parts = parsedUrl2.hostname.split(".");
-    return url1Parts[url1Parts.length - 1] === url2Parts[url2Parts.length - 1];
+    return url1Parts[url1Parts.length - 2] === url2Parts[url2Parts.length - 2];
   }
 
   private isReidrectedToNonWwwParentDomain(original: URL, target: URL) {
