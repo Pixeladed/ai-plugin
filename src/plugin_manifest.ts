@@ -71,17 +71,21 @@ export const PluginManifestSchema = z
     schema_version: z.string().describe("Manifest schema version"),
     name_for_model: z
       .string()
+      .max(50)
       .describe("Name the model will used to target the plugin"),
     name_for_human: z
       .string()
+      .max(50)
       .describe("Human-readable name, such as the full company name"),
     description_for_model: z
       .string()
+      .max(8000)
       .describe(
         "Description better tailored to the model, such as token context length considerations or keyword usage for improved plugin prompting"
       ),
     description_for_human: z
       .string()
+      .max(120)
       .describe("Human-readable description of the plugin"),
     auth: z
       .discriminatedUnion("type", [
