@@ -31,7 +31,10 @@ export class PluginExplorer {
         return undefined;
       }
 
-      throw new ManifestFetchError(`Request failed with status ${res.status}`);
+      throw new ManifestFetchError(
+        `Request failed with status ${res.status}`,
+        res
+      );
     }
 
     const data = await res.json();
