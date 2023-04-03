@@ -25,7 +25,7 @@ export class PluginExplorer {
   async scan(url: string): Promise<Manifest | undefined> {
     const manifestUrl = this.resolveManifestUrl(url);
     const res = await this.request(manifestUrl);
-    this.redirectValidator.maybeValidateRedirect(manifestUrl, res);
+    this.redirectValidator.maybeValidateRedirect(manifestUrl, res.url);
 
     if (!res.ok) {
       if (res.status === 404) {

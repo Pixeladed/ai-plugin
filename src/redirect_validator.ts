@@ -2,9 +2,9 @@ import { ManifestValidationError } from "./errors";
 
 export class RedirectValidator {
   // According to https://platform.openai.com/docs/plugins/production/defining-the-plugin-s-root-domain
-  maybeValidateRedirect(original: string, res: Response) {
+  maybeValidateRedirect(original: string, target: string) {
     const parsedOriginal = new URL(original);
-    const parsedTarget = new URL(res.url);
+    const parsedTarget = new URL(target);
 
     if (this.isReidrectedToNonWwwParentDomain(parsedOriginal, parsedTarget)) {
       throw new ManifestValidationError(
