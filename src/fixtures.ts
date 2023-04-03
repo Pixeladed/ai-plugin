@@ -15,7 +15,7 @@ export const aPluginManifest = (overrides?: Partial<Manifest>): Manifest => {
     api: {
       type: "openapi",
       url: "http://localhost:3333/openapi.yaml",
-      is_user_authenticated: false,
+      has_user_authentication: false,
     },
     logo_url: "http://localhost:3333/logo.png",
     contact_email: "support@example.com",

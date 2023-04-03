@@ -80,7 +80,7 @@ export class PluginExplorer {
       );
     }
 
-    const emailDomain = manifest.contact_email.split("@")[1];
+    const emailDomain = "https://" + manifest.contact_email.split("@")[1];
     if (!this.redirectValidator.isSameSecondDomain(manifestUrl, emailDomain)) {
       throw new ManifestValidationError(
         "The second-level domain of the email address should be the same as the second-level domain of the root domain"

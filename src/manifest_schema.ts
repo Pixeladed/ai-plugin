@@ -62,7 +62,7 @@ const ApiSchema = z
   .object({
     type: z.literal("openapi"),
     url: z.string(),
-    is_user_authenticated: z.boolean(),
+    has_user_authentication: z.boolean(),
   })
   .describe("API specification");
 
