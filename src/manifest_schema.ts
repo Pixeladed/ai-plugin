@@ -66,7 +66,7 @@ const ApiSchema = z
   })
   .describe("API specification");
 
-export const PluginManifestSchema = z
+export const ManifestSchema = z
   .object({
     schema_version: z.string().describe("Manifest schema version"),
     name_for_model: z
