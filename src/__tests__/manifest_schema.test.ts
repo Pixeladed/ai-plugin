@@ -2,6 +2,7 @@ import { ManifestSchema } from "../manifest_schema";
 
 describe("ManifestSchema", () => {
   it("correctly parses example plugin manifest", () => {
+    // example from https://platform.openai.com/docs/plugins/getting-started/plugin-manifest
     const raw = {
       schema_version: "v1",
       name_for_human: "TODO Plugin",
