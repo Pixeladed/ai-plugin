@@ -1,0 +1,10 @@
+{
+  "name": "ai-plugin",
+  "version": "1.0.0",
+  "description": "A library that lets you parse and interact with AI capabilities plugins according to Open AI's plugins specifications",
+  "main": "index.js",
+  "repository": "https://github.com/Pixeladed/ai-plugin",
+  "author": "Pixeladed",
+  "license": "MIT",
+  "private": false
+}
