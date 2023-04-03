@@ -149,7 +149,11 @@ describe("PluginExplorer", () => {
       } as Response);
       schema.parseAsync.mockResolvedValue(manifest);
       redirectValidator.isSameSecondDomain.mockImplementation((url1, url2) => {
-        if ([url1, url2].includes(manifest.contact_email.split("@")[1])) {
+        if (
+          [url1, url2].includes(
+            "https://" + manifest.contact_email.split("@")[1]
+          )
+        ) {
           return false;
         }
         return true;
