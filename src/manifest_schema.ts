@@ -107,3 +107,5 @@ export const ManifestSchema = z
       .describe("Redirect URL for users to view plugin information"),
   })
   .describe("A manifest object describing the AI plugin");
+
+export type Manifest = z.infer<typeof ManifestSchema>;
