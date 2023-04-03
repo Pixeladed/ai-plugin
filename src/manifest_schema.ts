@@ -58,6 +58,13 @@ const ManifestOAuthAuthSchema = BaseManifestAuthSchema.extend({
     ),
 }).describe("OAuth authentication");
 
+const ManifestAuthSchema = z.discriminatedUnion("type", [
+  ManifestServiceHttpAuthSchema,
+  ManifestUserHttpAuthSchema,
+  ManifestOAuthAuthSchema,
+  ManifestNoAuthAuthSchema,
+]);
+
 const ApiSchema = z
   .object({
     type: z.literal("openapi"),
@@ -87,14 +94,7 @@ export const ManifestSchema = z
       .string()
       .max(120)
       .describe("Human-readable description of the plugin"),
-    auth: z
-      .discriminatedUnion("type", [
-        ManifestServiceHttpAuthSchema,
-        ManifestUserHttpAuthSchema,
-        ManifestOAuthAuthSchema,
-        ManifestNoAuthAuthSchema,
-      ])
-      .describe("Authentication schema"),
+    auth: ManifestAuthSchema.describe("Authentication schema"),
     api: ApiSchema,
     logo_url: z.string().describe("URL used to fetch the plugin's logo"),
     contact_email: z
@@ -109,3 +109,5 @@ export const ManifestSchema = z
   .describe("A manifest object describing the AI plugin");
 
 export type Manifest = z.infer<typeof ManifestSchema>;
+export type ManifestAuth = z.infer<typeof ManifestAuthSchema>;
+export type ManifestAuthOauth = z.infer<typeof ManifestOAuthAuthSchema>;

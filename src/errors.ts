@@ -15,3 +15,5 @@ export class ManifestFetchError extends Error {
     super(message);
   }
 }
+
+export class PluginAuthenticationError extends Error {}
