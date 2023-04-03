@@ -34,6 +34,11 @@ export class RedirectValidator {
     const parsedUrl2 = new URL(url2);
     const url1Parts = parsedUrl1.hostname.split(".");
     const url2Parts = parsedUrl2.hostname.split(".");
+
+    if (url1Parts.length === url2Parts.length && url1Parts.length === 1) {
+      return parsedUrl1.hostname === parsedUrl2.hostname;
+    }
+
     return url1Parts[url1Parts.length - 2] === url2Parts[url2Parts.length - 2];
   }
 

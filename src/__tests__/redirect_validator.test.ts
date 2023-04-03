@@ -91,5 +91,14 @@ describe("RedirectValidator", () => {
         )
       ).toBe(false);
     });
+
+    it("allows 2 urls with no TLD but the same hostname", () => {
+      expect(
+        validator.isSameSecondDomain(
+          "https://localhost:3000",
+          "https://localhost:2000"
+        )
+      ).toBe(true);
+    });
   });
 });
