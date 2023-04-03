@@ -10,7 +10,7 @@ describe("RedirectValidator", () => {
 
   it("allows redirect to the same domain", () => {
     const op = () =>
-      validator.maybeValidateRedirect(
+      validator.validateRedirect(
         "https://example.com/.well-known/ai-plugin.json",
         "https://example.com/.well-known/ai-plugin.json"
       );
@@ -19,7 +19,7 @@ describe("RedirectValidator", () => {
 
   it("allows redirect from www to root domain", () => {
     const op = () =>
-      validator.maybeValidateRedirect(
+      validator.validateRedirect(
         "https://www.example.com/.well-known/ai-plugin.json",
         "https://example.com/.well-known/ai-plugin.json"
       );
@@ -28,7 +28,7 @@ describe("RedirectValidator", () => {
 
   it("allows redirect to a sub domain", () => {
     const op = () =>
-      validator.maybeValidateRedirect(
+      validator.validateRedirect(
         "https://foo.example.com/.well-known/ai-plugin.json",
         "https://bar.foo.example.com/.well-known/ai-plugin.json"
       );
@@ -37,7 +37,7 @@ describe("RedirectValidator", () => {
 
   it("allows redirect to a sub domain with extended path", () => {
     const op = () =>
-      validator.maybeValidateRedirect(
+      validator.validateRedirect(
         "https://foo.example.com/.well-known/ai-plugin.json",
         "https://bar.foo.example.com/baz/.well-known/ai-plugin.json"
       );
@@ -46,7 +46,7 @@ describe("RedirectValidator", () => {
 
   it("disallows redirect to parent level domain", () => {
     const op = () =>
-      validator.maybeValidateRedirect(
+      validator.validateRedirect(
         "https://foo.example.com/.well-known/ai-plugin.json",
         "https://example.com/baz/.well-known/ai-plugin.json"
       );
@@ -55,7 +55,7 @@ describe("RedirectValidator", () => {
 
   it("disallows redirect to same level sub domain", () => {
     const op = () =>
-      validator.maybeValidateRedirect(
+      validator.validateRedirect(
         "https://foo.example.com/.well-known/ai-plugin.json",
         "https://bar.example.com/baz/.well-known/ai-plugin.json"
       );
@@ -64,7 +64,7 @@ describe("RedirectValidator", () => {
 
   it("disallows redirect to another domain", () => {
     const op = () =>
-      validator.maybeValidateRedirect(
+      validator.validateRedirect(
         "https://example.com/.well-known/ai-plugin.json",
         "https://example2.com/.well-known/ai-plugin.json"
       );

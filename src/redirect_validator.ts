@@ -2,7 +2,7 @@ import { ManifestValidationError } from "./errors";
 
 export class RedirectValidator {
   // According to https://platform.openai.com/docs/plugins/production/defining-the-plugin-s-root-domain
-  maybeValidateRedirect(original: string, target: string) {
+  validateRedirect(original: string, target: string) {
     const parsedOriginal = new URL(original);
     const parsedTarget = new URL(target);
 
@@ -25,6 +25,16 @@ export class RedirectValidator {
     }
 
     return;
+  }
+
+  // See https://en.wikipedia.org/wiki/Second-level_domain
+  // e.g. example.com -> TLD: "com", SLD: "example"
+  isSameSecondDomain(url1: string, url2: string) {
+    const parsedUrl1 = new URL(url1);
+    const parsedUrl2 = new URL(url2);
+    const url1Parts = parsedUrl1.hostname.split(".");
+    const url2Parts = parsedUrl2.hostname.split(".");
+    return url1Parts[url1Parts.length - 1] === url2Parts[url2Parts.length - 1];
   }
 
   private isReidrectedToNonWwwParentDomain(original: URL, target: URL) {
