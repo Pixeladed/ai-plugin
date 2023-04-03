@@ -33,11 +33,7 @@ export class PluginExplorer {
     }
 
     const data = await res.json();
-
-    // check for manifest and return undefined if not
-
     const manifest = await ManifestSchema.parseAsync(data);
-
     return manifest;
   }
 
