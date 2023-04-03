@@ -20,7 +20,6 @@ export class PluginExplorer {
 
   /**
    * Given a URL, provide information on the AI plugin if one is available.
-   * Exploration is based on the root domain - as specified by https://platform.openai.com/docs/plugins/production/defining-the-plugin-s-root-domain
    */
   async scan(url: string): Promise<Manifest | undefined> {
     const manifestUrl = this.resolveManifestUrl(url);
