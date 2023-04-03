@@ -19,33 +19,26 @@ export class PluginExplorer {
    * Given a URL, provide information on the AI plugin if one is available.
    * Exploration is based on the root domain - as specified by https://platform.openai.com/docs/plugins/production/defining-the-plugin-s-root-domain
    */
-  async scan(url: string): Promise<PluginExplorerScanResult> {
+  async scan(url: string): Promise<Manifest | undefined> {
     const manifestUrl = this.resolveManifestUrl(url);
-    let data: unknown;
-    try {
-      const res = await this.request(manifestUrl);
-      this.maybeValidateRedirect(manifestUrl, res);
-      data = await res.json();
-    } catch (error) {
-      if (!(error instanceof Error)) {
-        throw error;
+    const res = await this.request(manifestUrl);
+    this.maybeValidateRedirect(manifestUrl, res);
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        return undefined;
       }
 
-      return { ok: false, error };
+      throw new ManifestFetchError(`Request failed with status ${res.status}`);
     }
 
-    let manifest: Manifest;
-    try {
-      manifest = await ManifestSchema.parseAsync(data);
-    } catch (error) {
-      if (!(error instanceof Error)) {
-        throw error;
-      }
+    const data = await res.json();
 
-      return { ok: false, error };
-    }
+    // check for manifest and return undefined if not
 
-    return { ok: true, manifest };
+    const manifest = await ManifestSchema.parseAsync(data);
+
+    return manifest;
   }
 
   private resolveManifestUrl(url: string) {
@@ -116,18 +109,5 @@ export class PluginExplorer {
   }
 }
 
-export type PluginExplorerScanSuccess = {
-  ok: true;
-  manifest: Manifest;
-};
-
-export type PluginExplorerScanFailure = {
-  ok: false;
-  error: Error;
-};
-
-export type PluginExplorerScanResult =
-  | PluginExplorerScanSuccess
-  | PluginExplorerScanFailure;
-
 export class ManifestValidationError extends Error {}
+export class ManifestFetchError extends Error {}
