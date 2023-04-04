@@ -44,7 +44,7 @@ const main = async () => {
       tokenProvider
     );
     console.log("Interacted with", method, endpoint, parameters);
-    console.log("Received", await res.json());
+    console.log("Received", await res.text());
   }
 };
 

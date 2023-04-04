@@ -36,14 +36,18 @@ export class OpenAPIProvider {
       );
     }
 
-    const urlBuilder = new URL(baseUrl);
-    urlBuilder.pathname = endpoint;
-    const url = urlBuilder.toString();
     const authHeaders = await this.authProvider.getAuthHeaders(tokenProvider);
+    const { url, requestBody } = this.getRequestInfo(
+      baseUrl,
+      method,
+      endpoint,
+      parameters
+    );
 
     return this.request(url, {
       method,
-      body: JSON.stringify(parameters),
+      ...requestBody,
+
       headers: { ...authHeaders },
     });
   }
@@ -99,6 +103,62 @@ export class OpenAPIProvider {
     throw new PluginAPIError(
       `Unsupported Open API version ${this.spec.openapi}`
     );
+  }
+
+  private getRequestInfo(
+    baseUrl: string,
+    method: Method,
+    endpoint: string,
+    parameters: unknown
+  ) {
+    const url = this.getRequestUrl(baseUrl, method, endpoint, parameters);
+    const requestBody = this.getRequestBody(method, parameters);
+    return { url, requestBody };
+  }
+
+  private getRequestUrl(
+    baseUrl: string,
+    method: Method,
+    endpoint: string,
+    parameters: unknown
+  ) {
+    const url = new URL(baseUrl);
+    url.pathname = endpoint;
+    switch (method) {
+      case "GET":
+        url.search = new URLSearchParams(
+          parameters as Record<any, any>
+        ).toString();
+        break;
+      case "HEAD":
+      case "OPTIONS":
+      case "DELETE":
+      case "PATCH":
+      case "POST":
+      case "PUT":
+        break;
+      default:
+        throw new UnreachableError(method);
+    }
+
+    return url.toString();
+  }
+
+  private getRequestBody(method: Method, parameters: unknown) {
+    switch (method) {
+      case "GET":
+        return {};
+      case "HEAD":
+      case "OPTIONS":
+        return {};
+      case "DELETE":
+      case "PATCH":
+      case "POST":
+      case "PUT":
+        return { body: JSON.stringify(parameters) };
+      default:
+        throw new UnreachableError(method);
+    }
   }
 }
 
