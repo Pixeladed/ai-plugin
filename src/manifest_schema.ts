@@ -111,3 +111,4 @@ export const ManifestSchema = z
 export type Manifest = z.infer<typeof ManifestSchema>;
 export type ManifestAuth = z.infer<typeof ManifestAuthSchema>;
 export type ManifestAuthOauth = z.infer<typeof ManifestOAuthAuthSchema>;
+export type HttpAuthorizationType = z.infer<typeof HttpAuthorizationTypeSchema>;

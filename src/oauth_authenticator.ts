@@ -1,8 +1,8 @@
 import { URLSearchParams } from "url";
-import type { ManifestAuthOauth } from "../manifest_schema";
-import { PluginAuthenticationError } from "../errors";
+import type { ManifestAuthOauth } from "./manifest_schema";
+import { PluginAuthenticationError } from "./errors";
 
-class OAuthAuthenticator {
+export class OAuthAuthenticator {
   private clientUrl: string;
   private scope: string;
   private authorizationUrl: string;
