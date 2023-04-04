@@ -1,4 +1,4 @@
-import type { OpenAPI } from "openapi-types";
+import type { OpenAPI, OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from "openapi-types";
 import { PluginAPIError, UnreachableError } from "./errors";
 import type { Manifest } from "./manifest_schema";
 
@@ -22,7 +22,15 @@ export class OpenAPIProvider {
       );
     }
 
-    const url = new URL(this.manifest.api.url);
+    const baseUrl = this.getBaseUrl(this.spec);
+
+    if (!baseUrl) {
+      throw new PluginAPIError(
+        "Unable to parse Open API specification base url"
+      );
+    }
+
+    const url = new URL(baseUrl);
     url.pathname = endpoint;
     // TODO: provide auth based on manfiest
     const res = await this.request(url, {
@@ -62,6 +70,27 @@ export class OpenAPIProvider {
       default:
         throw new UnreachableError(method);
     }
+  }
+
+  private getBaseUrl(spec: OpenAPI.Document) {
+    if (spec.info.version.startsWith("v2")) {
+      const doc = spec as OpenAPIV2.Document;
+      return doc.host;
+    }
+
+    if (spec.info.version.startsWith("v3.0")) {
+      const doc = spec as OpenAPIV3.Document;
+      return doc.servers?.[0].url;
+    }
+
+    if (spec.info.version.startsWith("v3.1")) {
+      const doc = spec as OpenAPIV3_1.Document;
+      return doc.servers?.[0].url;
+    }
+
+    throw new PluginAPIError(
+      `Unsupported Open API version ${spec.info.version}`
+    );
   }
 }
 
