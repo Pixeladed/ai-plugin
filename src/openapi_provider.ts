@@ -8,7 +8,7 @@ import type { Manifest } from "./manifest_schema";
 export class OpenAPIProvider {
   constructor(
     private readonly manifest: Manifest,
-    private readonly spec: OpenAPI.Document,
+    readonly spec: OpenAPI.Document,
     // Fetch or fetch polyfill for making requests
     private readonly request: typeof fetch
   ) {}
