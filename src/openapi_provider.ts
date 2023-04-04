@@ -1,6 +1,6 @@
 import type { OpenAPI, OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from "openapi-types";
 import { PluginAPIError, UnreachableError } from "./errors";
-import type { AuthProvider } from "./auth_provider";
+import type { AuthProvider, TokenProvider } from "./auth_provider";
 
 /**
  * Provides the ability to interact with an API given an Open API specification
@@ -13,7 +13,12 @@ export class OpenAPIProvider {
     private readonly authProvider: AuthProvider
   ) {}
 
-  async interact(endpoint: string, method: Method, parameters: unknown) {
+  async interact(
+    endpoint: string,
+    method: Method,
+    parameters: unknown,
+    tokenProvider: TokenProvider
+  ) {
     const endpointSpec = this.getEndpointSpec(endpoint, method);
 
     if (!endpointSpec) {
@@ -33,7 +38,7 @@ export class OpenAPIProvider {
     const urlBuilder = new URL(baseUrl);
     urlBuilder.pathname = endpoint;
     const url = urlBuilder.toString();
-    const authHeaders = await this.authProvider.getAuthHeaders();
+    const authHeaders = await this.authProvider.getAuthHeaders(tokenProvider);
 
     return this.request(url, {
       method,
