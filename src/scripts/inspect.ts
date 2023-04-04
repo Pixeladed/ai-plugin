@@ -1,5 +1,7 @@
 import { AIPlugin } from "../ai_plugin";
+import { AuthProvider } from "../auth_provider";
 import { ManifestSchema } from "../manifest_schema";
+import { OpenAPIExplorer } from "../openapi_explorer";
 import { PluginExplorer } from "../plugin_explorer";
 import { RedirectValidator } from "../redirect_validator";
 
@@ -9,11 +11,8 @@ const main = async () => {
     throw new Error("A url must be provided");
   }
 
-  const explorer = new PluginExplorer(
-    fetch,
-    ManifestSchema,
-    new RedirectValidator()
-  );
+  const redirectValidator = new RedirectValidator();
+  const explorer = new PluginExplorer(fetch, ManifestSchema, redirectValidator);
 
   console.log("Provided url", url);
 
@@ -24,7 +23,10 @@ const main = async () => {
     return;
   }
 
-  const plugin = new AIPlugin(manifest);
+  const authProvider = new AuthProvider(manifest, "openai");
+  const openApiExplorer = new OpenAPIExplorer(fetch, redirectValidator);
+
+  const plugin = new AIPlugin(manifest, fetch, authProvider, openApiExplorer);
   console.log("Plugin", plugin);
 };
 
