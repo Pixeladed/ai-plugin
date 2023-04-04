@@ -1,14 +1,23 @@
+import { mock } from "jest-mock-extended";
 import { AIPlugin } from "../ai_plugin";
+import type { AuthProvider } from "../auth_provider";
 import { aPluginManifest } from "../fixtures";
 import type { Manifest } from "../manifest_schema";
+import type { OpenAPIExplorer } from "../openapi_explorer";
 
 describe("AIPlugin", () => {
   let manifest: Manifest;
   let plugin: AIPlugin;
+  let fakeFetch: jest.Mocked<typeof fetch>;
+  let authProvider: jest.Mocked<AuthProvider>;
+  let openApiExplorer: jest.Mocked<OpenAPIExplorer>;
 
   beforeEach(() => {
     manifest = aPluginManifest();
-    plugin = new AIPlugin(manifest);
+    fakeFetch = jest.fn();
+    authProvider = mock();
+    openApiExplorer = mock();
+    plugin = new AIPlugin(manifest, fakeFetch, authProvider, openApiExplorer);
   });
 
   it("correctly maps the plugin's information", () => {
