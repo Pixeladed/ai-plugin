@@ -1,11 +1,16 @@
 {
   "name": "ai-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A library that lets you parse and interact with AI capabilities plugins according to Open AI's plugins specifications",
   "main": "build/index.js",
   "repository": "https://github.com/Pixeladed/ai-plugin",
   "author": "Pixeladed",
   "license": "MIT",
+  "keywords": [
+    "ai-plugin",
+    "llm",
+    "openai"
+  ],
   "private": false,
   "scripts": {
     "build": "npx swc ./src -d build",
