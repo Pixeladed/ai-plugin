@@ -1,16 +1,16 @@
 import type { OpenAPI, OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from "openapi-types";
 import { PluginAPIError, UnreachableError } from "./errors";
-import type { Manifest } from "./manifest_schema";
+import type { AuthProvider } from "./auth_provider";
 
 /**
  * Provides the ability to interact with an API given an Open API specification
  */
 export class OpenAPIProvider {
   constructor(
-    private readonly manifest: Manifest,
     readonly spec: OpenAPI.Document,
     // Fetch or fetch polyfill for making requests
-    private readonly request: typeof fetch
+    private readonly request: typeof fetch,
+    private readonly authProvider: AuthProvider
   ) {}
 
   async interact(endpoint: string, method: Method, parameters: unknown) {
@@ -30,14 +30,16 @@ export class OpenAPIProvider {
       );
     }
 
-    const url = new URL(baseUrl);
-    url.pathname = endpoint;
-    // TODO: provide auth based on manfiest
-    const res = await this.request(url, {
+    const urlBuilder = new URL(baseUrl);
+    urlBuilder.pathname = endpoint;
+    const url = urlBuilder.toString();
+    const authHeaders = await this.authProvider.getAuthHeaders();
+
+    return this.request(url, {
       method,
       body: JSON.stringify(parameters),
+      headers: { ...authHeaders },
     });
-    return res;
   }
 
   private getEndpointSpec(endpoint: string, method: Method) {
