@@ -17,3 +17,11 @@ export class ManifestFetchError extends Error {
 }
 
 export class PluginAuthenticationError extends Error {}
+
+export class PluginAPIError extends Error {}
+
+export class UnreachableError extends Error {
+  constructor(val: never) {
+    super(`Unreachable codepath reached, received value ${val}`);
+  }
+}
