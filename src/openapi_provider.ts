@@ -1,13 +1,13 @@
 import type { OpenAPI } from "openapi-types";
 import { PluginAPIError, UnreachableError } from "./errors";
-import type { ManifestApi } from "./manifest_schema";
+import type { Manifest } from "./manifest_schema";
 
 /**
  * Provides the ability to interact with an API given an Open API specification
  */
 export class OpenAPIProvider {
   constructor(
-    private readonly manifest: ManifestApi,
+    private readonly manifest: Manifest,
     private readonly spec: OpenAPI.Document,
     // Fetch or fetch polyfill for making requests
     private readonly request: typeof fetch
@@ -22,7 +22,7 @@ export class OpenAPIProvider {
       );
     }
 
-    const url = new URL(this.manifest.url);
+    const url = new URL(this.manifest.api.url);
     url.pathname = endpoint;
     const res = await this.request(url, {
       method,
