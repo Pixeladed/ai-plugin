@@ -32,6 +32,7 @@ const main = async () => {
   console.log("Plugin", plugin);
 
   if (endpoint && method) {
+    console.log("Interacting with", method, endpoint);
     // TODO: interact with authenticated plugins
     const tokenProvider: TokenProvider = {
       getOAuthToken: async () => "",
