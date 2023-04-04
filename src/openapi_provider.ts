@@ -24,6 +24,7 @@ export class OpenAPIProvider {
 
     const url = new URL(this.manifest.api.url);
     url.pathname = endpoint;
+    // TODO: provide auth based on manfiest
     const res = await this.request(url, {
       method,
       body: JSON.stringify(parameters),
