@@ -8,7 +8,7 @@ import { PluginExplorer } from "../plugin_explorer";
 import { RedirectValidator } from "../redirect_validator";
 
 const main = async () => {
-  const [, , url, endpoint, method, ...parameters] = process.argv;
+  const [, , url, method, endpoint, parameters, ...others] = process.argv;
   if (!url) {
     throw new Error("A url must be provided");
   }

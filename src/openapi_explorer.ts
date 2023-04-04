@@ -1,3 +1,4 @@
+import { OpenAPI } from "openapi-types";
 import { ManifestFetchError } from "./errors";
 import type { RedirectValidator } from "./redirect_validator";
 import SwaggerParser from "@apidevtools/swagger-parser";
@@ -12,7 +13,7 @@ export class OpenAPIExplorer {
     private readonly redirectValidator: RedirectValidator
   ) {}
 
-  async inspect(url: string) {
+  async inspect(url: string): Promise<OpenApiSpec> {
     const res = await this.request(url);
     this.redirectValidator.validateRedirect(url, res.url);
 
@@ -25,6 +26,8 @@ export class OpenAPIExplorer {
 
     const data = await res.json();
     const manifest = await SwaggerParser.parse(data);
-    return manifest;
+    return { ...manifest, openapi: data.openapi };
   }
 }
+
+export type OpenApiSpec = OpenAPI.Document & { openapi: string };

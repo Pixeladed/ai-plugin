@@ -1,13 +1,14 @@
-import type { OpenAPI, OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from "openapi-types";
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from "openapi-types";
 import { PluginAPIError, UnreachableError } from "./errors";
 import type { AuthProvider, TokenProvider } from "./auth_provider";
+import type { OpenApiSpec } from "./openapi_explorer";
 
 /**
  * Provides the ability to interact with an API given an Open API specification
  */
 export class OpenAPIProvider {
   constructor(
-    readonly spec: OpenAPI.Document,
+    readonly spec: OpenApiSpec,
     // Fetch or fetch polyfill for making requests
     private readonly request: typeof fetch,
     private readonly authProvider: AuthProvider
@@ -79,24 +80,24 @@ export class OpenAPIProvider {
     }
   }
 
-  private getBaseUrl(spec: OpenAPI.Document) {
-    if (spec.info.version.startsWith("v2")) {
+  private getBaseUrl(spec: OpenApiSpec) {
+    if (spec.openapi.startsWith("2")) {
       const doc = spec as OpenAPIV2.Document;
       return doc.host;
     }
 
-    if (spec.info.version.startsWith("v3.0")) {
+    if (spec.openapi.startsWith("3.0")) {
       const doc = spec as OpenAPIV3.Document;
       return doc.servers?.[0].url;
     }
 
-    if (spec.info.version.startsWith("v3.1")) {
+    if (spec.openapi.startsWith("3.1")) {
       const doc = spec as OpenAPIV3_1.Document;
       return doc.servers?.[0].url;
     }
 
     throw new PluginAPIError(
-      `Unsupported Open API version ${spec.info.version}`
+      `Unsupported Open API version ${this.spec.openapi}`
     );
   }
 }
