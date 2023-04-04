@@ -1,7 +1,8 @@
-import { AuthProvider } from "./auth_provider";
+import type { AuthProvider, TokenProvider } from "./auth_provider";
 import type { Manifest } from "./manifest_schema";
 import { OpenAPIExplorer } from "./openapi_explorer";
 import { OpenAPIProvider } from "./openapi_provider";
+import type { Method } from "./openapi_provider";
 
 /**
  * A class that represents an AI plugin, providing capabilities to interact with the plugin's API
@@ -33,6 +34,22 @@ export class AIPlugin {
     this.contactEmail = manifest.contact_email;
     this.legalInfoUrl = manifest.legal_info_url;
     this.initOpenApiProvider();
+  }
+
+  async interact(
+    endpoint: string,
+    method: Method,
+    parameters: unknown,
+    tokenProvider: TokenProvider
+  ) {
+    const provider = await this.getOpenApiProvider();
+    const res = await provider.interact(
+      endpoint,
+      method,
+      parameters,
+      tokenProvider
+    );
+    return res;
   }
 
   private async initOpenApiProvider() {

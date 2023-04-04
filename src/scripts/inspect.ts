@@ -1,12 +1,14 @@
 import { AIPlugin } from "../ai_plugin";
 import { AuthProvider } from "../auth_provider";
+import type { TokenProvider } from "../auth_provider";
 import { ManifestSchema } from "../manifest_schema";
 import { OpenAPIExplorer } from "../openapi_explorer";
+import type { Method } from "../openapi_provider";
 import { PluginExplorer } from "../plugin_explorer";
 import { RedirectValidator } from "../redirect_validator";
 
 const main = async () => {
-  const url = process.argv[2];
+  const [, , url, endpoint, method, ...parameters] = process.argv;
   if (!url) {
     throw new Error("A url must be provided");
   }
@@ -28,6 +30,22 @@ const main = async () => {
 
   const plugin = new AIPlugin(manifest, fetch, authProvider, openApiExplorer);
   console.log("Plugin", plugin);
+
+  if (endpoint && method) {
+    // TODO: interact with authenticated plugins
+    const tokenProvider: TokenProvider = {
+      getOAuthToken: async () => "",
+      getUserToken: async () => "",
+    };
+    const res = await plugin.interact(
+      endpoint,
+      method as Method,
+      parameters,
+      tokenProvider
+    );
+    console.log("Interacted with", method, endpoint, parameters);
+    console.log("Received", await res.json());
+  }
 };
 
 main();
